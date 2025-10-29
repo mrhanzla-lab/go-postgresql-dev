@@ -15,9 +15,10 @@ jobs:
   build:
     name: Build & Install
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -41,7 +42,9 @@ jobs:
         run: go build -v ./...
 
       - name: Build example server
-        run: mkdir -p bin && go build -o bin/go-postgresqld ./examples/go-postgresqld
+        run: |
+          mkdir -p bin
+          go build -o bin/go-postgresqld ./examples/go-postgresqld
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -52,13 +55,14 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
-  # Stage 2: Lint & Security Scan
+  # Stage 2: Lint/Security Scan
   lint-security:
-    name: Lint & Security Scan
+    name: Lint/Security Scan
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -83,10 +87,11 @@ jobs:
           name: security-scan-results
           path: gosec-results.json
           retention-days: 30
+          if-no-files-found: ignore
 
-  # Stage 3: Test with PostgreSQL Service
+  # Stage 3: Test (with DB service)
   test:
-    name: Test with Database
+    name: Test (with DB service)
     runs-on: ubuntu-latest
     
     services:
@@ -106,7 +111,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -123,20 +128,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Install sysbench
-        run: sudo apt-get update && sudo apt-get install -y sysbench
+      - name: Download dependencies
+        run: go mod download
 
-      - name: Generate test certificates
-        run: make certs || echo "Certs generation skipped"
-
-      - name: Run tests
+      - name: Run tests with coverage
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: testdb
-        run: make test || go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
+        run: go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
 
       - name: Upload coverage to Codecov
         if: always()
@@ -144,19 +146,17 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage.out,postgresql-cover.out
+          files: coverage.out
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
 
-      - name: Upload test logs
+      - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-logs
-          path: |
-            coverage.out
-            postgresql-cover.out
+          name: test-coverage
+          path: coverage.out
           retention-days: 30
           if-no-files-found: ignore
 
@@ -168,7 +168,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -181,14 +181,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract metadata (tags, labels)
+      - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.DOCKER_IMAGE }}
           tags: |
             type=ref,event=branch
-            type=ref,event=pr
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
 
@@ -203,81 +202,28 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Upload build logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: docker-build-logs
-          path: /tmp/docker-build-*.log
-          retention-days: 7
-          if-no-files-found: ignore
-
-  # Stage 5: Deploy (Conditional - only on main branch)
+  # Stage 5: Deploy (Conditional - only when tests pass and branch = main)
   deploy:
-    name: Deploy to Registry
+    name: Deploy (Conditional)
     runs-on: ubuntu-latest
     needs: [docker-build]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-
       - name: Deploy notification
         run: |
           echo "🚀 Deployment triggered for branch: ${{ github.ref_name }}"
           echo "📦 Docker image pushed to: ${{ env.DOCKER_IMAGE }}"
-          echo "🔖 Tags: latest, ${{ github.sha }}"
+          echo "🔖 Commit: ${{ github.sha }}"
 
       - name: Create deployment summary
         run: |
           echo "## 🎉 Deployment Successful" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Tests Passed** - All tests completed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Branch: main** - Deploying from main/master branch" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Deployment Details" >> $GITHUB_STEP_SUMMARY
           echo "- **Docker Image:** \`${{ env.DOCKER_IMAGE }}:latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit SHA:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Timestamp:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 📋 Deployment Logs" >> $GITHUB_STEP_SUMMARY
-          echo "Image successfully pushed to Docker Hub and ready for production use." >> $GITHUB_STEP_SUMMARY
-
-      # Optional: Deploy to Render/Railway (uncomment and configure as needed)
-      # - name: Deploy to Render
-      #   env:
-      #     RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-      #   run: |
-      #     curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
-      #       -H "Authorization: Bearer $RENDER_API_KEY" \
-      #       -H "Content-Type: application/json"
-
-      # - name: Deploy to Railway
-      #   env:
-      #     RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-      #   run: |
-      #     curl -X POST "https://backboard.railway.app/graphql/v2" \
-      #       -H "Authorization: Bearer $RAILWAY_TOKEN" \
-      #       -H "Content-Type: application/json" \
-      #       -d '{"query":"mutation { deploymentTrigger(projectId: \"${{ secrets.RAILWAY_PROJECT_ID }}\") { id } }"}'
-
-  # Pipeline Summary
-  pipeline-summary:
-    name: Pipeline Summary
-    runs-on: ubuntu-latest
-    needs: [build, lint-security, test, docker-build]
-    if: always()
-    
-    steps:
-      - name: Generate pipeline summary
-        run: |
-          echo "# 📊 CI/CD Pipeline Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Stage | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Build & Install | ${{ needs.build.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Lint & Security | ${{ needs.lint-security.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Test | ${{ needs.test.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Docker Build | ${{ needs.docker-build.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Workflow:** \`${{ github.workflow }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Triggered by:** \`${{ github.event_name }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY

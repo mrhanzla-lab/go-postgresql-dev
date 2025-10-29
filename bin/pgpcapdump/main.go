@@ -37,11 +37,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql"
-	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
 )
 
 const (
