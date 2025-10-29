@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/cybergarage/go-logger/log"
-	"github.com/cybergarage/go-postgresql/postgresqltest/server"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresqltest/server"
 )
 
 func BenchmarkPgBench(b *testing.B) {

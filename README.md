@@ -1,6 +1,7 @@
 # go-postgresql
 
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/cybergarage/go-postgresql)
+[![CI/CD Pipeline](https://github.com/mrhanzla-lab/go-postgresql-dev/actions/workflows/ci.yml/badge.svg)](https://github.com/mrhanzla-lab/go-postgresql-dev/actions/workflows/ci.yml)
 [![test](https://github.com/cybergarage/go-postgresql/actions/workflows/make.yml/badge.svg)](https://github.com/cybergarage/go-postgresql/actions/workflows/make.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/cybergarage/go-postgresql.svg)](https://pkg.go.dev/github.com/cybergarage/go-postgresql) [![codecov](https://codecov.io/gh/cybergarage/go-postgresql/graph/badge.svg?token=IN4V9KDK69)](https://codecov.io/gh/cybergarage/go-postgresql)
 
@@ -49,6 +50,26 @@ Representative example projects built with go-postgresql:
 - [go-sqlserver](https://github.com/cybergarage/go-sqlserver) – Alternative SQL server implementation. [![Docker Image Version](https://img.shields.io/docker/v/cybergarage/go-sqlserver)](https://hub.docker.com/repository/docker/cybergarage/go-sqlserver/)
 - [PuzzleDB](https://github.com/cybergarage/puzzledb-go) – Pluggable multi‑model database. [![Docker Image Version](https://img.shields.io/docker/v/cybergarage/puzzledb)](https://hub.docker.com/repository/docker/cybergarage/puzzledb/)
 
+### Quick Start with Docker Compose (Recommended)
+
+Run the application with PostgreSQL database using Docker Compose:
+
+```powershell
+# Start all services (app + database)
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop services
+docker compose down
+
+# Stop and remove volumes (clean state)
+docker compose down -v
+```
+
+The application will be available on `http://localhost:5433` and PostgreSQL on `localhost:5432`.
+
 ### Quick Docker Run (Examples)
 
 Run the example in‑memory server (`go-postgresqld`) locally:
@@ -70,6 +91,34 @@ docker run --rm -p 5432:5432 cybergarage/puzzledb:latest
 ```
 
 Tip: Use `-e POSTGRES_INIT=...` (if the image supports custom init scripts) or mount volumes for persistence in extended setups.
+
+## CI/CD Pipeline
+
+This project implements a production-grade CI/CD pipeline with the following stages:
+
+1. **Build & Install** - Compile Go application and cache dependencies
+2. **Lint & Security Scan** - Run golangci-lint and gosec security scanner
+3. **Test with Database** - Execute tests against live PostgreSQL service
+4. **Build Docker Image** - Create and push containerized application
+5. **Deploy** - Conditional deployment to Docker Hub (main branch only)
+
+See [devops_report.md](devops_report.md) for detailed pipeline documentation.
+
+### Running Tests Locally
+
+```powershell
+# Start PostgreSQL for testing
+docker compose up -d postgres
+
+# Run tests
+go test -v -race -coverprofile=coverage.out ./...
+
+# Run specific package tests
+go test -v ./postgresql/...
+
+# Generate coverage report
+go tool cover -html=coverage.out
+```
 
 ## Related Projects
 

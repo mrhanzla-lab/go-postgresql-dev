@@ -17,7 +17,7 @@ package sysbench
 import (
 	"strconv"
 
-	"github.com/cybergarage/go-postgresql/postgresql"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql"
 	"github.com/cybergarage/go-sqltest/sqltest/sysbench"
 )
 

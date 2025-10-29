@@ -15,8 +15,8 @@
 package server
 
 import (
-	"github.com/cybergarage/go-postgresql/postgresql"
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
 )
 
 // Authenticate authenticates the connection with the startup protocol.

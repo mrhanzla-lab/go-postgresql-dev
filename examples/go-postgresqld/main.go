@@ -39,7 +39,7 @@ import (
 	"syscall"
 
 	clog "github.com/cybergarage/go-logger/log"
-	"github.com/cybergarage/go-postgresql/examples/go-postgresqld/server"
+	"github.com/mrhanzla-lab/go-postgresql-dev/examples/go-postgresqld/server"
 )
 
 const (

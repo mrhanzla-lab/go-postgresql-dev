@@ -38,8 +38,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cybergarage/go-postgresql/postgresql"
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"

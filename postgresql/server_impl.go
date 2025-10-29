@@ -18,7 +18,7 @@ import (
 	"errors"
 
 	"github.com/cybergarage/go-authenticator/auth"
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
 )
 
 // server represents a PostgreSQL protocol server.

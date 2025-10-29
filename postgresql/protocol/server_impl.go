@@ -20,8 +20,8 @@ import (
 	"strconv"
 
 	"github.com/cybergarage/go-logger/log"
-	"github.com/cybergarage/go-postgresql/postgresql/auth"
-	pgnet "github.com/cybergarage/go-postgresql/postgresql/net"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/auth"
+	pgnet "github.com/mrhanzla-lab/go-postgresql-dev/postgresql/net"
 	"github.com/cybergarage/go-tracing/tracer"
 )
 

@@ -15,7 +15,7 @@
 package protocol
 
 import (
-	"github.com/cybergarage/go-postgresql/postgresql/system"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/system"
 )
 
 // DataType represents a data type.

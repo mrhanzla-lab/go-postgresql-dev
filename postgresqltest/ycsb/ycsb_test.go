@@ -18,8 +18,8 @@ import (
 	"testing"
 
 	"github.com/cybergarage/go-logger/log"
-	"github.com/cybergarage/go-postgresql/postgresql"
-	"github.com/cybergarage/go-postgresql/postgresqltest/server"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresqltest/server"
 )
 
 func TestYCSB(t *testing.T) {

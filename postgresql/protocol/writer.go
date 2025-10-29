@@ -18,7 +18,7 @@ import (
 	"bufio"
 	"bytes"
 
-	encording "github.com/cybergarage/go-postgresql/postgresql/encoding/bytes"
+	encording "github.com/mrhanzla-lab/go-postgresql-dev/postgresql/encoding/bytes"
 )
 
 // Writer represents a message writer.

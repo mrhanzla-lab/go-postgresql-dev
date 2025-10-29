@@ -17,8 +17,8 @@ package query
 import (
 	"fmt"
 
-	"github.com/cybergarage/go-postgresql/postgresql/errors"
-	"github.com/cybergarage/go-postgresql/postgresql/system"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/errors"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/system"
 	"github.com/cybergarage/go-sqlparser/sql/query"
 )
 

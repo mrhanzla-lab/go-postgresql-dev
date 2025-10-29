@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/cybergarage/go-logger/log"
-	"github.com/cybergarage/go-postgresql/postgresql"
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
 )
 
 // ParserError handles a parser error.

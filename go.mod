@@ -1,4 +1,4 @@
-module github.com/cybergarage/go-postgresql
+module github.com/mrhanzla-lab/go-postgresql-dev
 
 go 1.25
 

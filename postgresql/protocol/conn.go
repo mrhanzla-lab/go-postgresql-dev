@@ -17,7 +17,7 @@ package protocol
 import (
 	"crypto/tls"
 
-	"github.com/cybergarage/go-postgresql/postgresql/net"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/net"
 )
 
 // ConnID represents a connection ID.

@@ -17,7 +17,7 @@ package certs
 import (
 	"testing"
 
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
 )
 
 const (

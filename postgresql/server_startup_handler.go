@@ -21,7 +21,7 @@ import (
 	"os"
 
 	"github.com/cybergarage/go-logger/log"
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
 )
 
 // protocolStartupHandler  a new protocol startup executor.

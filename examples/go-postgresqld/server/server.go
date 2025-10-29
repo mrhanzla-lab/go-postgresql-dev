@@ -15,8 +15,8 @@
 package server
 
 import (
-	"github.com/cybergarage/go-postgresql/examples/go-postgresqld/server/store"
-	"github.com/cybergarage/go-postgresql/postgresql"
+	"github.com/mrhanzla-lab/go-postgresql-dev/examples/go-postgresqld/server/store"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql"
 )
 
 // Server represents a test server.

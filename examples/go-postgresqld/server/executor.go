@@ -21,9 +21,9 @@ package server
 
 import (
 	"github.com/cybergarage/go-logger/log"
-	"github.com/cybergarage/go-postgresql/postgresql"
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
-	"github.com/cybergarage/go-postgresql/postgresql/query"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/query"
 )
 
 // Copy handles a COPY query.

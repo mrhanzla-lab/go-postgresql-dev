@@ -15,8 +15,8 @@
 package postgresql
 
 import (
-	"github.com/cybergarage/go-postgresql/postgresql/net"
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/net"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
 )
 
 // ConnID represents a connection ID.

@@ -20,9 +20,9 @@ import (
 	"io"
 
 	"github.com/cybergarage/go-logger/log"
-	"github.com/cybergarage/go-postgresql/postgresql/errors"
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
-	"github.com/cybergarage/go-postgresql/postgresql/query"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/errors"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/query"
 	sql "github.com/cybergarage/go-sqlparser/sql/query"
 )
 

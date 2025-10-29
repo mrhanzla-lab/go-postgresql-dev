@@ -18,9 +18,9 @@ import (
 	"testing"
 
 	"github.com/cybergarage/go-logger/log/hexdump"
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
-	"github.com/cybergarage/go-postgresql/postgresql/query"
-	"github.com/cybergarage/go-postgresql/postgresql/stmt"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/query"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/stmt"
 )
 
 func TestParsePacket(t *testing.T) {

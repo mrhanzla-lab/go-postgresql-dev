@@ -18,7 +18,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
 )
 
 // CopyStream represents a copy stream.

@@ -17,7 +17,7 @@ package postgresql
 import (
 	"fmt"
 
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
 )
 
 // nullErrorHandler represents a base error handler.

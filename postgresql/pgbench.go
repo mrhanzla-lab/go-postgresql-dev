@@ -15,8 +15,8 @@
 package postgresql
 
 import (
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
-	"github.com/cybergarage/go-postgresql/postgresql/system"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/system"
 )
 
 var (

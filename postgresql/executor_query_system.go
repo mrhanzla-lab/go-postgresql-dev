@@ -15,9 +15,9 @@
 package postgresql
 
 import (
-	"github.com/cybergarage/go-postgresql/postgresql/errors"
-	"github.com/cybergarage/go-postgresql/postgresql/protocol"
-	"github.com/cybergarage/go-postgresql/postgresql/query"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/errors"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/protocol"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/query"
 )
 
 // defaultSystemQueryExecutor represents a base system query executor.

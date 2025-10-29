@@ -1,11 +1,22 @@
+# Build stage
+FROM golang:1.25-alpine AS builder
+
+RUN apk update && apk add --no-cache git
+
+WORKDIR /build
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+RUN go build -o /go-postgresqld ./examples/go-postgresqld
+
+# Runtime stage
 FROM alpine:latest
-RUN apk update && apk add git go
 
-USER root
+RUN apk update && apk add --no-cache ca-certificates
 
-COPY . /go-postgresql
-WORKDIR /go-postgresql
-
-RUN go build -o /go-postgresqld github.com/cybergarage/go-postgresql/examples/go-postgresqld
+COPY --from=builder /go-postgresqld /go-postgresqld
 
 ENTRYPOINT ["/go-postgresqld"]

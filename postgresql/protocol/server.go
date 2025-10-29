@@ -15,7 +15,7 @@
 package protocol
 
 import (
-	"github.com/cybergarage/go-postgresql/postgresql/auth"
+	"github.com/mrhanzla-lab/go-postgresql-dev/postgresql/auth"
 	"github.com/cybergarage/go-tracing/tracer"
 )
 
