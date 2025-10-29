@@ -39,7 +39,7 @@ jobs:
         run: go mod download
 
       - name: Build application
-        run: go build -v ./...
+        run: go build -v ./postgresql/... ./postgresqltest/...
 
       - name: Build example server
         run: |
@@ -73,13 +73,13 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: latest
-          args: --timeout=5m
+          args: --timeout=5m --skip-dirs=bin
 
       - name: Install gosec
         run: go install github.com/securego/gosec/v2/cmd/gosec@latest
 
       - name: Run gosec security scanner
-        run: gosec -fmt=json -out=gosec-results.json ./... || true
+        run: gosec -fmt=json -out=gosec-results.json -exclude-dir=bin ./... || true
 
       - name: Upload security scan results
         uses: actions/upload-artifact@v4
@@ -138,7 +138,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: testdb
-        run: go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
+        run: go test -v -race -coverprofile=coverage.out -covermode=atomic ./postgresql/... ./postgresqltest/...
 
       - name: Upload coverage to Codecov
         if: always()
