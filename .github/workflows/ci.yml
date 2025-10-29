@@ -7,7 +7,7 @@ on:
     branches: [ "master", "main" ]
 
 env:
-  GO_VERSION: '1.24.x'
+  GO_VERSION: '1.23.x'
   DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/go-postgresql
 
 jobs:
@@ -36,15 +36,15 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Download dependencies
-        run: go mod download
+        run: GOTOOLCHAIN=auto go mod download
 
       - name: Build application
-        run: go build -v ./postgresql/... ./postgresqltest/...
+        run: GOTOOLCHAIN=auto go build -v ./postgresql/... ./postgresqltest/...
 
       - name: Build example server
         run: |
           mkdir -p bin
-          go build -o bin/go-postgresqld ./examples/go-postgresqld
+          GOTOOLCHAIN=auto go build -o bin/go-postgresqld ./examples/go-postgresqld
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -135,7 +135,7 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Download dependencies
-        run: go mod download
+        run: GOTOOLCHAIN=auto go mod download
 
       - name: Run tests with coverage
         continue-on-error: true
@@ -145,7 +145,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: testdb
-        run: go test -v -coverprofile=coverage.out -covermode=atomic ./postgresql/... ./postgresqltest/... || echo "Some tests failed but continuing"
+        run: GOTOOLCHAIN=auto go test -v -coverprofile=coverage.out -covermode=atomic ./postgresql/... ./postgresqltest/... || echo "Some tests failed but continuing"
 
       - name: Upload coverage to Codecov
         if: always()
