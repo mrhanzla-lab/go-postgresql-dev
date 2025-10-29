@@ -31,7 +31,6 @@ pgpcapdump is a dump utility for PostgreSQL packet capture file.
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/hex"
 	"flag"
@@ -128,7 +127,7 @@ func main() {
 	fmt.Printf("reqWriter = %d %s\n", reqWriter.Len(), hex.EncodeToString(reqWriter.Bytes()[:128]))
 	fmt.Printf("resWriter = %d %s\n", resWriter.Len(), hex.EncodeToString(resWriter.Bytes()[:128]))
 
-	reqMsgReader := protocol.NewMessageReaderWith(bufio.NewReader(bytes.NewReader(reqWriter.Bytes())))
+	reqMsgReader := protocol.NewMessageReaderWith(protocol.WithMessageReadeBytes(reqWriter.Bytes()))
 
 	// Handle a Start-up protocol.
 
