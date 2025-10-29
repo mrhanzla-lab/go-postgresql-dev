@@ -1,6 +1,6 @@
 module github.com/mrhanzla-lab/go-postgresql-dev
 
-go 1.25
+go 1.23
 
 require (
 	github.com/cybergarage/go-authenticator v1.0.5

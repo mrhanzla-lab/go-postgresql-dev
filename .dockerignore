@@ -1,0 +1,6 @@
+# Ignore bin directory during Docker build
+bin/
+*.exe
+.git/
+.github/
+*.md
