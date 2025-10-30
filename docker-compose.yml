@@ -40,6 +40,20 @@ services:
       - app-network
     restart: unless-stopped
 
+  # Web Frontend Service
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: go-postgresql-web
+    ports:
+      - "8080:8080"
+    environment:
+      WEB_PORT: 8080
+    networks:
+      - app-network
+    restart: unless-stopped
+
 volumes:
   postgres_data:
     driver: local

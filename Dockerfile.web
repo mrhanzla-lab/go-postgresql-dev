@@ -1,0 +1,37 @@
+# Build stage
+FROM golang:1-alpine AS builder
+
+# Set GOTOOLCHAIN for dependency compatibility
+ENV GOTOOLCHAIN=auto
+
+WORKDIR /build
+
+# Copy go mod files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy source code
+COPY cmd/webserver/ ./cmd/webserver/
+COPY web/ ./web/
+
+# Build the web server
+RUN CGO_ENABLED=0 GOOS=linux go build -o /webserver ./cmd/webserver
+
+# Runtime stage
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /app
+
+# Copy binary and web files from builder
+COPY --from=builder /webserver .
+COPY --from=builder /build/web ./web
+
+# Expose web port
+EXPOSE 8080
+
+# Run web server
+CMD ["/app/webserver"]
