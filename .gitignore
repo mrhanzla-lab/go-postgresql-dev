@@ -27,3 +27,6 @@ __debug_bin
 *.html
 *.log
 *.pcapng
+
+# Environment variables with secrets
+.env
