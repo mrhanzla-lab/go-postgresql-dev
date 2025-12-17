@@ -46,7 +46,7 @@ variable "private_subnet_cidrs" {
 variable "eks_cluster_version" {
   description = "Kubernetes version for EKS cluster"
   type        = string
-  default     = "1.28"
+  default     = "1.31"
 }
 
 variable "eks_node_instance_types" {

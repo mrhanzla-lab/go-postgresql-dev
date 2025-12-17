@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: go-postgresql-dev
+  labels:
+    name: go-postgresql-dev
+    environment: dev

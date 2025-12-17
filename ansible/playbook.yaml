@@ -1,0 +1,133 @@
+---
+- name: Deploy go-postgresql application to Kubernetes (EKS)
+  hosts: local
+  gather_facts: yes
+  vars:
+    k8s_manifests_path: "../k8s"
+    namespace: "go-postgresql-dev"
+  
+  tasks:
+    - name: Display deployment information
+      debug:
+        msg: "Starting deployment of go-postgresql to EKS cluster"
+
+    - name: Check kubectl is installed
+      command: kubectl version --client
+      register: kubectl_version
+      changed_when: false
+      
+    - name: Display kubectl version
+      debug:
+        var: kubectl_version.stdout_lines
+
+    - name: Verify connection to Kubernetes cluster
+      command: kubectl cluster-info
+      register: cluster_info
+      changed_when: false
+      
+    - name: Display cluster information
+      debug:
+        msg: "{{ cluster_info.stdout_lines }}"
+
+    - name: Create namespace
+      command: kubectl apply -f {{ k8s_manifests_path }}/namespace.yaml
+      register: namespace_result
+      
+    - name: Display namespace creation result
+      debug:
+        var: namespace_result.stdout
+
+    - name: Apply ConfigMap
+      command: kubectl apply -f {{ k8s_manifests_path }}/configmap.yaml
+      register: configmap_result
+      
+    - name: Display ConfigMap result
+      debug:
+        var: configmap_result.stdout
+
+    - name: Apply Secrets
+      command: kubectl apply -f {{ k8s_manifests_path }}/secret.yaml
+      register: secret_result
+      
+    - name: Display Secret result
+      debug:
+        var: secret_result.stdout
+
+    - name: Deploy Redis
+      command: kubectl apply -f {{ k8s_manifests_path }}/redis-deployment.yaml
+      register: redis_result
+      
+    - name: Display Redis deployment result
+      debug:
+        var: redis_result.stdout
+
+    - name: Deploy RabbitMQ
+      command: kubectl apply -f {{ k8s_manifests_path }}/rabbitmq-deployment.yaml
+      register: rabbitmq_result
+      
+    - name: Display RabbitMQ deployment result
+      debug:
+        var: rabbitmq_result.stdout
+
+    - name: Wait for Redis to be ready
+      command: kubectl wait --for=condition=available --timeout=120s deployment/redis -n {{ namespace }}
+      register: redis_wait
+      ignore_errors: yes
+      
+    - name: Display Redis ready status
+      debug:
+        var: redis_wait.stdout
+
+    - name: Wait for RabbitMQ to be ready
+      command: kubectl wait --for=condition=available --timeout=120s deployment/rabbitmq -n {{ namespace }}
+      register: rabbitmq_wait
+      ignore_errors: yes
+      
+    - name: Display RabbitMQ ready status
+      debug:
+        var: rabbitmq_wait.stdout
+
+    - name: Deploy Application
+      command: kubectl apply -f {{ k8s_manifests_path }}/app-deployment.yaml
+      register: app_result
+      
+    - name: Display Application deployment result
+      debug:
+        var: app_result.stdout
+
+    - name: Get all pods in namespace
+      command: kubectl get pods -n {{ namespace }}
+      register: pods_status
+      changed_when: false
+      
+    - name: Display pods status
+      debug:
+        msg: "{{ pods_status.stdout_lines }}"
+
+    - name: Get all services in namespace
+      command: kubectl get services -n {{ namespace }}
+      register: services_status
+      changed_when: false
+      
+    - name: Display services
+      debug:
+        msg: "{{ services_status.stdout_lines }}"
+
+    - name: Get deployment status
+      command: kubectl get deployments -n {{ namespace }}
+      register: deployments_status
+      changed_when: false
+      
+    - name: Display deployments status
+      debug:
+        msg: "{{ deployments_status.stdout_lines }}"
+
+    - name: Deployment summary
+      debug:
+        msg:
+          - "========================================="
+          - "Deployment completed successfully!"
+          - "Namespace: {{ namespace }}"
+          - "Services deployed: Redis, RabbitMQ, Go-PostgreSQL App"
+          - "Check services with: kubectl get all -n {{ namespace }}"
+          - "========================================="

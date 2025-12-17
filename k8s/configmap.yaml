@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: go-postgresql-config
+  namespace: go-postgresql-dev
+data:
+  # PostgreSQL RDS Configuration
+  DB_HOST: "go-postgresql-dev-postgres.cuf2o0quy3ul.us-east-1.rds.amazonaws.com"
+  DB_PORT: "5432"
+  DB_NAME: "postgresqldb"
+  
+  # Redis Configuration
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  
+  # RabbitMQ Configuration
+  RABBITMQ_HOST: "rabbitmq"
+  RABBITMQ_PORT: "5672"
+  
+  # Application Configuration
+  APP_ENV: "production"
+  APP_PORT: "8080"
+  LOG_LEVEL: "info"
